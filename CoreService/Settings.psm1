@@ -49,6 +49,7 @@ Function Get-DefaultSettings
 		"Version" = "2011-SP1";
 		"ConnectionType" = "Default";
 		"ModuleVersion" = $moduleVersion;
+        "MaxReceivedMessageSize" = [long]::MaxValue;
 	};
 }
 
@@ -189,6 +190,9 @@ Function Set-CoreServiceSettings
 		
 		[Parameter()]
 		[string]$ConnectionSendTimeout,
+
+        [Parameter()]
+        [int]$MaxReceivedMessageSize = 0,
 		
 		[Parameter()]
 		[switch]$Persist
@@ -201,10 +205,12 @@ Function Set-CoreServiceSettings
 		$versionSpecified = (![string]::IsNullOrEmpty($Version));
 		$connectionTypeSpecified = (![string]::IsNullOrEmpty($ConnectionType));
 		$connectionSendTimeoutSpecified = (![string]::IsNullOrEmpty($ConnectionSendTimeout));
+        $maxReceivedMessageSizeSpecified = ($maxReceivedMessageSize -ne 0)
 		
 		$settings = Get-Settings;
 		if ($connectionTypeSpecified) { $settings.ConnectionType = $ConnectionType; }
 		if ($connectionSendTimeoutSpecified) { $settings.ConnectionSendTimeout = $ConnectionSendTimeout; }
+        $settings.MaxReceivedMessageSize = $MaxReceivedMessageSize;
 		if ($hostNameSpecified) { $settings.HostName = $HostName; }
 		if ($userNameSpecified) { $settings.UserName = $UserName; }
 		if ($versionSpecified) { $settings.Version = $Version; }
